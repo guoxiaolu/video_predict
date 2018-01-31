@@ -32,7 +32,9 @@ input = Input(shape=(seq_length, 2048,), name='input')
 x = LSTM(2048, return_sequences=False, dropout=0.75, name='lstm1')(input)
 x = Dense(1024, activation='relu', name='dense1')(x)
 x = Dropout(0.75, name='dropout_1')(x)
-out = Dense(2, activation='relu', name='out')(x)
+out0 = Dense(1, activation='sigmoid', name='out_play')(x)
+out1 = Dense(1, activation='sigmoid', name='out_like')(x)
+out = [out0, out1]
 
 model = Model(inputs=input, outputs=out)
 model.summary()

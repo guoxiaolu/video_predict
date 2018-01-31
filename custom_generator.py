@@ -30,9 +30,9 @@ def frame_generator(sequence_path, seq_length, y_list, batch_size=32):
                     raise ValueError("Can't find sequence. Did you generate them?")
 
                 X.append(sequence)
-                y.append(value)
+                y.append(np.array(value))
                 if len(X) == batch_size or i == num - 1:
                     start = i+1
                     break
 
-            yield np.array(X), np.array(y)
+            yield np.array(X), y
