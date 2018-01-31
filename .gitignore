@@ -3,5 +3,7 @@ data/frame/
 data/sequence/
 data/video/
 data/video0/
+data/test.txt
+data/train.txt
 *.pyc
 .idea/
