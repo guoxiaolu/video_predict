@@ -1,0 +1,7 @@
+data/data_file.csv
+data/frame/
+data/sequence/
+data/video/
+data/video0/
+*.pyc
+.idea/
