@@ -20,7 +20,7 @@ def rescale_list(input_list, size):
 # Set defaults.
 seq_length = 200
 
-video_path = 'data/video0'
+video_path = 'data/video'
 frame_path = 'data/frame'
 sequence_path = 'data/sequence'
 if not os.path.exists(sequence_path):

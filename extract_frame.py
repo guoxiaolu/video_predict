@@ -16,7 +16,7 @@ def extract_files():
     `ffmpeg -i video.mpg image-%04d.jpg`
     """
     data_file = []
-    folders = ['data/video0']
+    folders = ['data/video']
     dst_path = 'data/frame'
     if not os.path.exists(dst_path):
         os.mkdir(dst_path)
