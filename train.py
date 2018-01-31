@@ -1,5 +1,6 @@
 from keras.models import Model
 from keras.layers import Input, LSTM, GRU, Dense, Dropout
+from keras.optimizers import SGD
 from keras.callbacks import ModelCheckpoint, TensorBoard
 from custom_generator import frame_generator
 
@@ -35,6 +36,9 @@ out = Dense(2, activation='relu', name='out')(x)
 
 model = Model(inputs=input, outputs=out)
 model.summary()
+
+sgd = SGD(lr=0.01, momentum=0.9, decay=1e-3, nesterov=False)
+model.compile(loss='mean_absolute_error', optimizer=sgd, metrics=['accuracy'])
 
 tb = TensorBoard(log_dir='./logs', histogram_freq=0, write_graph=True, write_images=False)
 mc = ModelCheckpoint('./model/weights.{epoch:05d}.hdf5', monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=False, mode='auto', period=1)
