@@ -4,7 +4,7 @@ from keras.optimizers import SGD
 from keras.callbacks import ModelCheckpoint, TensorBoard
 from custom_generator import frame_generator
 
-nb_epoch = 100
+nb_epoch = 500
 seq_length = 200
 batch_size = 32
 sequence_path = 'data/sequence'
