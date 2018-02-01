@@ -4,7 +4,7 @@ import random
 import os
 
 split_ratio = 0.9
-label = ['id', 'playcount/delta_normalize', 'like/delta_normalize']
+label = ['id', 'playcount/delta_normalize', 'like/delta_normalize', 'total']
 f = open('data/iqiyi_autoad.csv', 'r')
 fl = open('data/video_download_list.txt', 'r')
 
@@ -28,7 +28,7 @@ for row in reader:
     else:
         id = int(row[label_id[0]])
         if '%05d.mp4'%id in video_list:
-            gt[id] = [float(row[label_id[1]]), float(row[label_id[2]])]
+            gt[id] = [float(row[label_id[1]]), float(row[label_id[2]]), float(row[label_id[3]])]
 
 keys = gt.keys()
 random.shuffle(keys)
@@ -37,9 +37,9 @@ split_idx = int(split_ratio * len(keys))
 
 for i, k in enumerate(keys):
     if i < split_idx:
-        ftrain.write('%05d.mp4\t%f\t%f\n'%(k, gt[k][0], gt[k][1]))
+        ftrain.write('%05d.mp4\t%f\t%f\t%f\n'%(k, gt[k][0], gt[k][1], gt[k][2]))
     else:
-        ftest.write('%05d.mp4\t%f\t%f\n'%(k, gt[k][0], gt[k][1]))
+        ftest.write('%05d.mp4\t%f\t%f\t%f\n'%(k, gt[k][0], gt[k][1], gt[k][2]))
 
 ftest.close()
 ftrain.close()

@@ -6,7 +6,7 @@ from custom_generator import frame_generator
 
 nb_epoch = 100
 seq_length = 200
-batch_size = 32
+batch_size = 2
 sequence_path = 'data/sequence'
 train_file = 'data/train.txt'
 test_file = 'data/test.txt'
@@ -32,9 +32,7 @@ input = Input(shape=(seq_length, 2048,), name='input')
 x = LSTM(2048, return_sequences=False, dropout=0.75, name='lstm1')(input)
 x = Dense(1024, activation='relu', name='dense1')(x)
 x = Dropout(0.75, name='dropout_1')(x)
-out0 = Dense(1, activation='sigmoid', name='out_play')(x)
-out1 = Dense(1, activation='sigmoid', name='out_like')(x)
-out = [out0, out1]
+out = Dense(1, activation='sigmoid', name='out')(x)
 
 model = Model(inputs=input, outputs=out)
 model.summary()
