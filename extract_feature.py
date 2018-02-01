@@ -17,31 +17,50 @@ def rescale_list(input_list, size):
     # Cut off the last one if needed.
     return output
 
-# Set defaults.
-seq_length = 200
+def extract_feature(video_path='data/video', frame_path='data/frame', sequence_path='data/sequence', seq_length=200):
+    if not os.path.exists(sequence_path):
+        os.mkdir(sequence_path)
 
-video_path = 'data/video'
-frame_path = 'data/frame'
-sequence_path = 'data/sequence'
-if not os.path.exists(sequence_path):
-    os.mkdir(sequence_path)
+    video_name = glob.glob(os.path.join(video_path, '*.mp4'))
+    video_name_noext = [name.split(os.path.sep)[-1].split('.')[0] for name in video_name]
 
-video_name = os.listdir(video_path)
-video_name_noext = [name.split('.')[0] for name in video_name]
+    pbar = tqdm(total=len(video_name_noext))
+    model = Extractor()
+    for video in video_name_noext:
+        img_list = glob.glob(os.path.join(frame_path, video+'_*.jpg'))
+        if len(img_list) == 0:
+            continue
 
-pbar = tqdm(total=len(video_name_noext))
-model = Extractor()
-for video in video_name_noext:
-    img_list = glob.glob(os.path.join(frame_path, video+'_*.jpg'))
+        seqfile = os.path.join(sequence_path, video + '_' + str(seq_length) + '.npy')
+        # Check if we already have it.
+        if os.path.isfile(seqfile):
+            pbar.update(1)
+            continue
+
+        img_list_sorted = sorted(img_list)
+        frames = rescale_list(img_list_sorted, seq_length)
+
+        sequence = []
+        for image in frames:
+            features = model.extract(image)
+            sequence.append(features)
+
+        # Save the sequence.
+        np.save(seqfile, sequence)
+
+        pbar.update(1)
+    pbar.close()
+
+def extract_one_feature(video, frame_path, sequence_path, seq_length=200):
+    model = Extractor()
+    img_list = glob.glob(os.path.join(frame_path, video + '_*.jpg'))
     if len(img_list) == 0:
-        continue
+        return
 
     seqfile = os.path.join(sequence_path, video + '_' + str(seq_length) + '.npy')
-
     # Check if we already have it.
     if os.path.isfile(seqfile):
-        pbar.update(1)
-        continue
+        return
 
     img_list_sorted = sorted(img_list)
     frames = rescale_list(img_list_sorted, seq_length)
@@ -54,5 +73,8 @@ for video in video_name_noext:
     # Save the sequence.
     np.save(seqfile, sequence)
 
-    pbar.update(1)
-pbar.close()
+def main():
+    extract_feature()
+
+if __name__ == '__main__':
+    main()
