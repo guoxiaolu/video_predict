@@ -1,5 +1,6 @@
 import numpy as np
 import os
+from random import shuffle
 
 def frame_generator(sequence_path, seq_length, y_list, batch_size=32):
     """Return a generator that we can use to train on. There are
@@ -9,6 +10,8 @@ def frame_generator(sequence_path, seq_length, y_list, batch_size=32):
     num = len(y_list)
     while True:
         start = 0
+        # shuffle the list after one epoch
+        shuffle(y_list)
         while True:
             X, y = [], []
             if start >= num:
