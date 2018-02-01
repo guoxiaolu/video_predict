@@ -6,7 +6,7 @@ from custom_generator import frame_generator
 
 nb_epoch = 100
 seq_length = 200
-batch_size = 2
+batch_size = 32
 sequence_path = 'data/sequence'
 train_file = 'data/train.txt'
 test_file = 'data/test.txt'
@@ -37,9 +37,9 @@ out = Dense(1, activation='sigmoid', name='out')(x)
 model = Model(inputs=input, outputs=out)
 model.summary()
 
-sgd = SGD(lr=0.01, momentum=0.9, decay=1e-3, nesterov=False)
+sgd = SGD(lr=0.001, momentum=0.9, decay=1e-3, nesterov=False)
 model.compile(loss='mean_absolute_error', optimizer=sgd, metrics=['accuracy'])
 
 tb = TensorBoard(log_dir='./logs', histogram_freq=0, write_graph=True, write_images=False)
-mc = ModelCheckpoint('./model/weights.{epoch:05d}.hdf5', monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=False, mode='auto', period=1)
+mc = ModelCheckpoint('./model/weights.{epoch:05d}.hdf5', monitor='val_loss', verbose=0, save_best_only=False, save_weights_only=False, mode='auto', period=10)
 model.fit_generator(train_generator, len(y_train)/batch_size, nb_epoch=nb_epoch, callbacks=[tb, mc], validation_data=test_generator, validation_steps=len(y_test), initial_epoch=0)
