@@ -15,23 +15,23 @@ lines = tf.readlines()
 y_train = []
 for line in lines:
     con = line.strip().split('\t')
-    y_train.append([con[0], float(con[1]), float(con[2])])
+    y_train.append([con[0], float(con[1]), float(con[2]), float(con[3])])
 
 tf = open(test_file, 'r')
 lines = tf.readlines()
 y_test = []
 for line in lines:
     con = line.strip().split('\t')
-    y_test.append([con[0], float(con[1]), float(con[2])])
+    y_test.append([con[0], float(con[1]), float(con[2]), float(con[3])])
 tf.close()
 
 train_generator = frame_generator(sequence_path, seq_length, y_train, batch_size)
 test_generator = frame_generator(sequence_path, seq_length, y_test, 1)
 
 input = Input(shape=(seq_length, 2048,), name='input')
-x = LSTM(2048, return_sequences=False, dropout=0.75, name='lstm1')(input)
-x = Dense(1024, activation='relu', name='dense1')(x)
-x = Dropout(0.75, name='dropout_1')(x)
+x = LSTM(2048, return_sequences=False, dropout=0.25, name='lstm1')(input)
+x = Dense(512, activation='relu', name='dense1')(x)
+x = Dropout(0.25, name='dropout_1')(x)
 out = Dense(1, activation='sigmoid', name='out')(x)
 
 model = Model(inputs=input, outputs=out)
