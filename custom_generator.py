@@ -29,8 +29,8 @@ def frame_generator(sequence_path, seq_length, y_list, batch_size=32):
                 if sequence is None:
                     raise ValueError("Can't find sequence. Did you generate them?")
 
-                X.append(sequence)
-                y.append(value)
+                X.append(np.array(sequence))
+                y.append(np.array(value))
                 if len(X) == batch_size or i == num - 1:
                     start = i+1
                     break
