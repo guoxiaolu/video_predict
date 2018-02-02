@@ -23,7 +23,7 @@ def frame_generator(sequence_path, seq_length, y_list, batch_size=32):
                     continue
                 # Reset to be safe.
                 name = v[0]
-                value = v[-1]
+                value = v[-1:]
                 sequence = None
 
                 path = os.path.join(sequence_path, name.split('.')[0]+'_'+str(seq_length)+'.npy')
