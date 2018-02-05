@@ -8,16 +8,21 @@ import glob
 def rescale_list(input_list, size):
     """Given a list and a size, return a rescaled/samples list. For example,
     if we want a list of size 5 and we have a list of size 25, return a new
-    list of size five which is every 5th element of the original list."""
-    assert len(input_list) >= size
+    list of size five which is every 5th element of the original list.
+    If the list size is smaller than size, will append -1 to make the return
+    list size is same as 'size'."""
+    # assert len(input_list) >= size
+    list_size = len(input_list)
+    if list_size >= size:
+        samples = np.linspace(0, len(input_list)-1, size, dtype=int).tolist()
+        output = [input_list[s] for s in samples]
+    else:
+        output = input_list + [-1] * (size - list_size)
 
-    samples = np.linspace(0, len(input_list)-1, size, dtype=int).tolist()
-    output = [input_list[s] for s in samples]
-
-    # Cut off the last one if needed.
     return output
 
-def extract_feature(video_path='data/video', frame_path='data/frame', sequence_path='data/sequence', seq_length=200):
+def extract_feature(video_path='data/video', frame_path='data/frame', sequence_path='data/sequence',
+                    seq_length=200, feature_length=2048):
     if not os.path.exists(sequence_path):
         os.mkdir(sequence_path)
 
@@ -42,7 +47,11 @@ def extract_feature(video_path='data/video', frame_path='data/frame', sequence_p
 
         sequence = []
         for image in frames:
-            features = model.extract(image)
+            if image != -1:
+                features = model.extract(image)
+            else:
+                # zero paddind to the end of the list
+                features = np.zeros((feature_length, ),dtype='float32')
             sequence.append(features)
 
         # Save the sequence.
@@ -51,7 +60,7 @@ def extract_feature(video_path='data/video', frame_path='data/frame', sequence_p
         pbar.update(1)
     pbar.close()
 
-def extract_one_feature(video, frame_path, sequence_path, seq_length=200):
+def extract_one_feature(video, frame_path, sequence_path, seq_length=200, feature_length=2048):
     model = Extractor()
     img_list = glob.glob(os.path.join(frame_path, video + '_*.jpg'))
     if len(img_list) == 0:
@@ -67,7 +76,10 @@ def extract_one_feature(video, frame_path, sequence_path, seq_length=200):
 
     sequence = []
     for image in frames:
-        features = model.extract(image)
+        if image != -1:
+            features = model.extract(image)
+        else:
+            features = np.zeros((feature_length, 1))
         sequence.append(features)
 
     # Save the sequence.
