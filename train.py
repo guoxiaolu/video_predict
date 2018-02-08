@@ -29,7 +29,7 @@ train_generator = frame_generator(sequence_path, seq_length, y_train, batch_size
 test_generator = frame_generator(sequence_path, seq_length, y_test, 1)
 
 input = Input(shape=(seq_length, 2048,), name='input')
-x = LSTM(2048, return_sequences=False, dropout=0.25, name='lstm1')(input)
+x = LSTM(1024, return_sequences=False, dropout=0.25, name='lstm1')(input)
 x = Dense(512, activation='relu', name='dense1')(x)
 x = Dropout(0.25, name='dropout_1')(x)
 out = Dense(1, activation='sigmoid', name='out')(x)
