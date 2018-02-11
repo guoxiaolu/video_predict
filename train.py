@@ -1,11 +1,11 @@
 from keras.models import Model
-from keras.layers import Input, LSTM, GRU, Dense, Dropout
+from keras.layers import Input, LSTM, GRU, Dense, Dropout, Bidirectional, BatchNormalization
 from keras.optimizers import SGD
 from keras.callbacks import ModelCheckpoint, TensorBoard
 from custom_generator import frame_generator
 
 nb_epoch = 500
-seq_length = 200
+seq_length = 400
 batch_size = 32
 sequence_path = 'data/sequence'
 train_file = 'data/train.txt'
@@ -29,8 +29,9 @@ train_generator = frame_generator(sequence_path, seq_length, y_train, batch_size
 test_generator = frame_generator(sequence_path, seq_length, y_test, 1)
 
 input = Input(shape=(seq_length, 2048,), name='input')
-x = LSTM(1024, return_sequences=False, dropout=0.25, name='lstm1')(input)
-x = Dense(512, activation='relu', name='dense1')(x)
+x = BatchNormalization()(input)
+x = Bidirectional(LSTM(512, return_sequences=False, dropout=0.25, name='lstm1'))(x)
+x = Dense(128, activation='relu', name='dense1')(x)
 x = Dropout(0.25, name='dropout_1')(x)
 out = Dense(1, activation='sigmoid', name='out')(x)
 
