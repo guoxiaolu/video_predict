@@ -1,28 +1,42 @@
 from keras.preprocessing import image
 from keras.applications.inception_v3 import InceptionV3, preprocess_input
+from keras.applications.resnet50 import ResNet50
 from keras.models import Model, load_model
 from keras.layers import Input
 import numpy as np
 
 class Extractor():
-    def __init__(self, weights=None):
+    def __init__(self, weights=None, model_name='inception_v3'):
         """Either load pretrained from imagenet, or load our saved
         weights from our own training."""
 
         self.weights = weights  # so we can check elsewhere which model
+        self.model_name = model_name
 
         if weights is None:
             # Get model with pretrained weights.
-            base_model = InceptionV3(
-                weights='imagenet',
-                include_top=True
-            )
+            if model_name == 'resnet50':
+                base_model = ResNet50(
+                    weights='imagenet',
+                    include_top=True
+                )
 
-            # We'll extract features at the final pool layer.
-            self.model = Model(
-                inputs=base_model.input,
-                outputs=base_model.get_layer('avg_pool').output
-            )
+                # We'll extract features at the final pool layer.
+                self.model = Model(
+                    inputs=base_model.input,
+                    outputs=base_model.get_layer('avg_pool').output
+                )
+            else:
+                base_model = InceptionV3(
+                    weights='imagenet',
+                    include_top=True
+                )
+
+                # We'll extract features at the final pool layer.
+                self.model = Model(
+                    inputs=base_model.input,
+                    outputs=base_model.get_layer('avg_pool').output
+                )
 
         else:
             # Load the model first.
@@ -37,7 +51,11 @@ class Extractor():
             self.model.layers[-1].outbound_nodes = []
 
     def extract(self, image_path):
-        img = image.load_img(image_path, target_size=(299, 299))
+        if self.model_name == 'resnet50':
+            target_size = (224,224)
+        else:
+            target_size = (299,299)
+        img = image.load_img(image_path, target_size=target_size)
         x = image.img_to_array(img)
         x = np.expand_dims(x, axis=0)
         x = preprocess_input(x)

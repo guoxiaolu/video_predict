@@ -6,6 +6,7 @@ from custom_generator import frame_generator
 
 nb_epoch = 500
 seq_length = 400
+feature_length = 4096
 batch_size = 32
 sequence_path = 'data/sequence'
 train_file = 'data/train.txt'
@@ -28,7 +29,7 @@ tf.close()
 train_generator = frame_generator(sequence_path, seq_length, y_train, batch_size)
 test_generator = frame_generator(sequence_path, seq_length, y_test, 1)
 
-input = Input(shape=(seq_length, 2048,), name='input')
+input = Input(shape=(seq_length, feature_length,), name='input')
 x = BatchNormalization()(input)
 x = Bidirectional(LSTM(512, return_sequences=False, dropout=0.25, name='lstm1'))(x)
 x = Dense(128, activation='relu', name='dense1')(x)

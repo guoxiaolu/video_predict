@@ -22,7 +22,7 @@ def rescale_list(input_list, size):
     return output
 
 def extract_feature(video_path='data/video', frame_path='data/frame', sequence_path='data/sequence',
-                    seq_length=400, feature_length=2048):
+                    seq_length=400, feature_length=4096):
     if not os.path.exists(sequence_path):
         os.mkdir(sequence_path)
 
@@ -31,6 +31,7 @@ def extract_feature(video_path='data/video', frame_path='data/frame', sequence_p
 
     pbar = tqdm(total=len(video_name_noext))
     model = Extractor()
+    model_resnet50 = Extractor(model_name='resnet50')
     for video in video_name_noext:
         img_list = glob.glob(os.path.join(frame_path, video+'_*.jpg'))
         if len(img_list) == 0:
@@ -49,6 +50,8 @@ def extract_feature(video_path='data/video', frame_path='data/frame', sequence_p
         for image in frames:
             if image != -1:
                 features = model.extract(image)
+                features_resnet50 = model_resnet50.extract(image)
+                features = np.concatenate((features, features_resnet50.flatten()))
             else:
                 # zero paddind to the end of the list
                 features = np.zeros((feature_length, ),dtype='float32')
@@ -60,8 +63,9 @@ def extract_feature(video_path='data/video', frame_path='data/frame', sequence_p
         pbar.update(1)
     pbar.close()
 
-def extract_one_feature(video, frame_path, sequence_path, seq_length=400, feature_length=2048):
+def extract_one_feature(video, frame_path, sequence_path, seq_length=400, feature_length=4096):
     model = Extractor()
+    model_resnet50 = Extractor(model_name='resnet50')
     img_list = glob.glob(os.path.join(frame_path, video + '_*.jpg'))
     if len(img_list) == 0:
         return
@@ -78,6 +82,8 @@ def extract_one_feature(video, frame_path, sequence_path, seq_length=400, featur
     for image in frames:
         if image != -1:
             features = model.extract(image)
+            features_resnet50 = model_resnet50.extract(image)
+            features = np.concatenate((features, features_resnet50.flatten()))
         else:
             features = np.zeros((feature_length, 1))
         sequence.append(features)
