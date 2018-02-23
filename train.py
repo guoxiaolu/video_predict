@@ -6,7 +6,7 @@ from custom_generator import frame_generator
 
 nb_epoch = 500
 seq_length = 400
-feature_length = 4096
+feature_length = 2048
 batch_size = 32
 sequence_path = 'data/sequence'
 train_file = 'data/train.txt'
