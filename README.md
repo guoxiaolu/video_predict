@@ -19,5 +19,5 @@ Currently get the validation loss with about 0.23.
 Prediction:
 input is one video.
 
-Currently, audio features can be added just as youtube8m method.
+Currently, audio features can be added just as youtube8m method. Related codes come from: https://github.com/tensorflow/models/tree/master/research/audioset
 More improvment...
