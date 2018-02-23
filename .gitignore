@@ -5,6 +5,7 @@ data/video/
 data/video0/
 data/test.txt
 data/train.txt
+data/audio
 *.pyc
 .idea/
 model/
