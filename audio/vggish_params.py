@@ -51,3 +51,6 @@ INPUT_TENSOR_NAME = INPUT_OP_NAME + ':0'
 OUTPUT_OP_NAME = 'vggish/embedding'
 OUTPUT_TENSOR_NAME = OUTPUT_OP_NAME + ':0'
 AUDIO_EMBEDDING_FEATURE_NAME = 'audio_embedding'
+
+# added params, embedding length
+SEQ_LENGTH = 200

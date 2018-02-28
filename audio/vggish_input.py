@@ -39,6 +39,8 @@ def waveform_to_examples(data, sample_rate):
     spectrogram, covering num_frames frames of audio and num_bands mel frequency
     bands, where the frame length is vggish_params.STFT_HOP_LENGTH_SECONDS.
   """
+  # calculate wav sec
+  sec = float(data.shape[0]) / sample_rate
   # Convert to mono.
   if len(data.shape) > 1:
     data = np.mean(data, axis=1)
@@ -61,8 +63,10 @@ def waveform_to_examples(data, sample_rate):
   features_sample_rate = 1.0 / vggish_params.STFT_HOP_LENGTH_SECONDS
   example_window_length = int(round(
       vggish_params.EXAMPLE_WINDOW_SECONDS * features_sample_rate))
+  # example_hop_length = int(round(
+  #     vggish_params.EXAMPLE_HOP_SECONDS * features_sample_rate))
   example_hop_length = int(round(
-      vggish_params.EXAMPLE_HOP_SECONDS * features_sample_rate))
+      sec/vggish_params.SEQ_LENGTH * features_sample_rate))
   log_mel_examples = mel_features.frame(
       log_mel,
       window_length=example_window_length,
