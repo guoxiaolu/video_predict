@@ -4,8 +4,8 @@ import vggish_postprocess
 import vggish_slim
 import tensorflow as tf
 
-pca_params = './model/vggish_pca_params.npz'
-checkpoint = './model/vggish_model.ckpt'
+pca_params = './audio_model/vggish_pca_params.npz'
+checkpoint = './audio_model/vggish_model.ckpt'
 
 # Prepare a postprocessor to munge the model embeddings.
 pproc = vggish_postprocess.Postprocessor(pca_params)
