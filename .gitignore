@@ -10,5 +10,6 @@ data/audio
 *.pyc
 .idea/
 model/
+audio_model/
 logs/
 tmp/
