@@ -51,7 +51,7 @@ def combined_generator(sequence_path_frame, seq_length_frame, sequence_path_audi
         # shuffle the list after one epoch
         shuffle(y_list)
         while True:
-            X_frame, X_audio, y = [], []
+            X_frame, X_audio, y = [], [], []
             if start >= num:
                 start = 0
 
