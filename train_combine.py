@@ -2,7 +2,7 @@ from keras.models import Model
 from keras.layers import Input, LSTM, Dense, Dropout, Bidirectional, BatchNormalization, Concatenate
 from keras.optimizers import SGD
 from keras.callbacks import ModelCheckpoint, TensorBoard
-from custom_generator import frame_generator
+from custom_generator import combined_generator
 
 nb_epoch = 500
 seq_length_frame = 400
@@ -29,11 +29,10 @@ for line in lines:
     y_test.append([con[0], float(con[1]), float(con[2]), float(con[3])])
 tf.close()
 
-train_generator_frame = frame_generator(sequence_path_frame, seq_length_frame, y_train, batch_size)
-test_generator_frame = frame_generator(sequence_path_frame, seq_length_frame, y_test, 1)
-
-train_generator_audio = frame_generator(sequence_path_audio, seq_length_audio, y_train, batch_size)
-test_generator_audio = frame_generator(sequence_path_audio, seq_length_audio, y_test, 1)
+train_generator = combined_generator(sequence_path_frame, seq_length_frame, sequence_path_audio,
+                                     seq_length_audio, y_train, batch_size)
+test_generator = combined_generator(sequence_path_frame, seq_length_frame, sequence_path_audio,
+                                    seq_length_audio, y_test, 1)
 
 input_frame = Input(shape=(seq_length_frame, feature_length_frame,), name='input_frame')
 x_frame = BatchNormalization()(input_frame)
@@ -57,6 +56,6 @@ model.compile(loss='mean_absolute_error', optimizer=sgd, metrics=['accuracy'])
 tb = TensorBoard(log_dir='./logs', histogram_freq=0, write_graph=True, write_images=False)
 mc = ModelCheckpoint('./model/weights.{epoch:05d}.hdf5', monitor='val_loss', verbose=0, save_best_only=False,
                      save_weights_only=False, mode='auto', period=10)
-model.fit_generator([train_generator_frame,train_generator_audio], len(y_train)/batch_size, nb_epoch=nb_epoch,
-                    callbacks=[tb, mc], validation_data=[test_generator_frame,test_generator_audio],
+model.fit_generator(train_generator, len(y_train)/batch_size, nb_epoch=nb_epoch,
+                    callbacks=[tb, mc], validation_data=test_generator,
                     validation_steps=len(y_test), initial_epoch=0)
