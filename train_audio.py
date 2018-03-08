@@ -31,8 +31,8 @@ test_generator = frame_generator(sequence_path, seq_length, y_test, 1)
 
 input = Input(shape=(seq_length, feature_length,), name='input')
 x = BatchNormalization()(input)
-x = Bidirectional(LSTM(32, return_sequences=False, dropout=0.25, name='lstm1'))(x)
-x = Dense(8, activation='relu', name='dense1')(x)
+x = Bidirectional(LSTM(128, return_sequences=False, dropout=0.25, name='lstm1'))(x)
+x = Dense(32, activation='relu', name='dense1')(x)
 x = Dropout(0.25, name='dropout_1')(x)
 out = Dense(1, activation='sigmoid', name='out')(x)
 
