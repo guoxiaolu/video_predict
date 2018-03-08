@@ -41,11 +41,12 @@ x_frame = Dense(128, activation='relu', name='dense_frame')(x_frame)
 
 input_audio = Input(shape=(seq_length_audio, feature_length_audio,), name='input_audio')
 x_audio = BatchNormalization()(input_audio)
-x_audio = Bidirectional(LSTM(32, return_sequences=False, dropout=0.25, name='lstm_audio'))(x_audio)
-x_audio = Dense(8, activation='relu', name='dense_audio')(x_audio)
+x_audio = Bidirectional(LSTM(128, return_sequences=False, dropout=0.25, name='lstm_audio'))(x_audio)
+x_audio = Dense(32, activation='relu', name='dense_audio')(x_audio)
 
 concat = Concatenate(name='concate')([x_frame, x_audio])
-out = Dense(1, activation='sigmoid', name='out')(concat)
+x = Dropout(0.25, name='dropout')(concat)
+out = Dense(1, activation='sigmoid', name='out')(x)
 
 model = Model(inputs=[input_frame, input_audio], outputs=out)
 model.summary()
