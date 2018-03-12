@@ -41,7 +41,7 @@ hist = np.histogram(all_v, range=(0,1))
 num = np.sort(hist[0])[-2]
 gt_0_sample = random.sample(gt_0, len(gt_0)-num)
 for k,v in gt_all.items():
-    if k in gt_0:
+    if k in gt_0_sample:
         continue
     else:
         gt[k] = v
