@@ -23,4 +23,4 @@ for line in lines:
     sequence_frame = np.load(frame_path)
     sequence_audio = np.load(audio_path)
     result = model.predict([np.expand_dims(sequence_frame, axis=0), np.expand_dims(sequence_audio, axis=0)])[0][0]
-    print '%s/t%s\t%f'%(result, gt, result)
+    print '%s\t%s\t%f'%(result, gt, result)
